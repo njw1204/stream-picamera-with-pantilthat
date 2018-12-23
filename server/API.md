@@ -1,8 +1,4 @@
 # API Document
-서버 이용을 위해서 우선 모듈을 설치해야 합니다.<br/>
-프로젝트 루트 폴더에서 `pip3 install -r requirements.txt`<br/>
-그 후 `sudo python3 app.py` 를 하면 서버가 실행됩니다.<br/>
-<br/>
 
 ## 1. 토큰
 

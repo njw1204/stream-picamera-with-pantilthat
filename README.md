@@ -1,6 +1,7 @@
 # stream-picamera-with-pantilthat
 ## 사용법
-- sudo python3 app.py
+- `pip3 install -r requirements.txt`
+- `sudo python3 app.py`
 - URL : http://127.0.0.1:5000
 
 ## 주의사항
