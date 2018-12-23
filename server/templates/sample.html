@@ -1,0 +1,210 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My Home CCTV</title>
+    <script src="/js/jquery-3.1.1.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/css/fontawesome.min.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+    <style>
+        img {
+            border-radius: 1rem;
+        }
+        img.center {
+            display: block;
+            margin: 0 auto;
+        }
+        img.shadow {
+            box-shadow: 0 0.2rem 0.4rem 0 rgba(0, 0, 0, 0.2), 0 0.3rem 0.5rem 0 rgba(0, 0, 0, 0.19);
+        }
+        th {
+            font-size: large;
+            text-align: center;
+        }
+        th.adjust {
+            padding-left: 3rem !important;
+            padding-right: 3rem !important;
+        }
+        td.adjust {
+            vertical-align: middle !important;
+            padding: 1.5rem !important;
+        }
+        div.container {
+            text-align: center;
+        }
+        .table-nonfluid {
+            width: auto !important;
+        }
+        input[type=radio] {
+            /* Double-sized Checkboxes */
+            -ms-transform: scale(1.3); /* IE */
+            -moz-transform: scale(1.3); /* FF */
+            -webkit-transform: scale(1.3); /* Safari and Chrome */
+            -o-transform: scale(1.3); /* Opera */
+        }
+        input[type=checkbox] {
+            /* Double-sized Checkboxes */
+            -ms-transform: scale(1.3); /* IE */
+            -moz-transform: scale(1.3); /* FF */
+            -webkit-transform: scale(1.3); /* Safari and Chrome */
+            -o-transform: scale(1.3); /* Opera */
+        }
+        @media all and (max-width: 459px) {
+            table#pcview { display: none; }
+            table#mobview { width: 70vw !important; }
+            .headertitle { display: none; }
+            img#cctvstream { margin-top: 3rem; }
+            div#cctvheader { margin-bottom: 3rem; }
+        }
+        @media all and (min-width: 460px) {
+            table.mob { display: none; }
+            div#cctvheader { margin-bottom: 5rem; }
+        }
+     </style>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('button.move').click(function(){
+                var obj = {
+                    dir: $(this).attr('value'),
+                    value: 5
+                };
+                $.ajax({
+                    type: 'POST',
+                    url: '/move',
+                    dataType: 'json',
+                    beforeSend: function(request) {
+                        request.setRequestHeader('x-access-token', '{{ token }}');
+                    },
+                    data: JSON.stringify(obj),
+                    contentType: 'application/json',
+                    processData: false,
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        switch (jqXHR.status) {
+                        case 403:
+                            alert('Login has expired!');
+                            location.href = '/login';
+                            break;
+                        }
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container center-block">
+        <div id="cctvheader" class="container center-block">
+            <h2 style="margin-bottom:3rem;" class="headertitle"><i class="fas fa-home"></i> My Home CCTV</h2>
+            <img id="cctvstream" class="img-responsive center shadow"
+                 src="{{ '/stream?x-access-token=' + token }}" />
+        </div>
+        <div class="container center-block">
+            <table id="pcview" class="table table-bordered table-striped table-nonfluid" align="center">
+                <thead>
+                <tr>
+                    <th class="adjust"><i class="fas fa-arrows-alt"></i> 이동</th>
+                    <th class="adjust"><i class="fas fa-cog"></i> 설정</th>
+                </tr>
+                <thead>
+                <tbody>
+                <tr>
+                    <td align="center" class="adjust">
+                        <div>
+                            <div style="margin-bottom:1.5rem;">
+                                <button class="move btn btn-primary btn-lg" value="down"><i class="fas fa-arrow-up"></i></button>
+                            </div>
+                            <div>
+                                <button class="move btn btn-primary btn-lg" value="left"><i class="fas fa-arrow-left"></i></button>
+                                &nbsp;
+                                <button class="move btn btn-primary btn-lg" value="up"><i class="fas fa-arrow-down"></i></button>
+                                &nbsp;
+                                <button class="move btn btn-primary btn-lg" value="right"><i class="fas fa-arrow-right"></i></button>
+                            </div>
+                        </div>
+                    </td>
+                    <td align="center" class="adjust">
+                        <div>
+                            <input id="radio_1" type='radio' name='cctv_mode' checked>
+                            <label for="radio_1">스트리밍</label>
+                        </div>
+                        <div>
+                            <input id="radio_2" type='radio' name='cctv_mode'>
+                            <label for="radio_2">보안작동</label>
+                        </div>
+                        <div style="margin-top:2rem;">
+                            <label>
+                                <input id="check_1" type='checkbox' name='security_func' autocomplete="off">
+                                경보음
+                            </label>
+                            &nbsp;&nbsp;
+                            <label>
+                                <input id="check_2" type='checkbox' name='email_func' autocomplete="off">
+                                이메일
+                            </label>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <table id="mobview" class="table table-bordered table-striped table-nonfluid mob" align="center">
+                <thead>
+                <tr>
+                    <th class="adjust"><i class="fas fa-arrows-alt"></i> 이동</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td align="center" class="adjust">
+                        <div>
+                            <div style="margin-bottom:1.5rem;">
+                                <button class="move btn btn-primary btn-lg" value="down"><i class="fas fa-arrow-up"></i></button>
+                            </div>
+                            <div>
+                                <button class="move btn btn-primary btn-lg" value="left"><i class="fas fa-arrow-left"></i></button>
+                                &nbsp;
+                                <button class="move btn btn-primary btn-lg" value="up"><i class="fas fa-arrow-down"></i></button>
+                                &nbsp;
+                                <button class="move btn btn-primary btn-lg" value="right"><i class="fas fa-arrow-right"></i></button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+                <thead>
+                <tr>
+                    <th class="adjust"><i class="fas fa-cog"></i> 설정</th>
+                </tr>
+                <thead>
+                <tbody>
+                <tr>
+                    <td align="center" class="adjust">
+                        <div>
+                            <input id="radio_1" type='radio' name='cctv_mode' checked>
+                            <label for="radio_1">스트리밍</label>
+                        </div>
+                        <div>
+                            <input id="radio_2" type='radio' name='cctv_mode'>
+                            <label for="radio_2">보안작동</label>
+                        </div>
+                        <div style="margin-top:2rem;">
+                            <label>
+                                <input id="check_1" type='checkbox' name='security_func' autocomplete="off">
+                                경보음
+                            </label>
+                            &nbsp;&nbsp;
+                            <label>
+                                <input id="check_2" type='checkbox' name='email_func' autocomplete="off">
+                                이메일
+                            </label>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
